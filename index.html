@@ -1,5 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sacrament Meeting Program</title>
+
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f7f7f7;
+        color: #222;
+    }
+
+    header {
+        background: #003366;
+        color: white;
+        padding: 1.2rem;
+        text-align: center;
+        font-size: 1.5rem;
+    }
+
+    .section {
+        background: white;
+        margin: 0.8rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .section-header {
+        padding: 1rem;
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .section-content {
+        padding: 1rem;
+        display: none;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .section.open .section-content {
+        display: block;
+    }
+
+    ul {
+        padding-left: 1.2rem;
+    }
+</style>
+
+</head>
+<body>
+
+<header id="program-date">Sacrament Meeting Program</header>
+
+<div id="program-container"></div>
+
 <script>
-const jsonUrl = "https://1drv.ms/u/c/f3a38f6c89693944/IQDClBXmCcxyQoYcbB1XzJhKASJ7rk2rgftOdEobjgRCeOI?e=FwTHFg";
+const jsonUrl = "YOUR_JSON_PUBLIC_LINK_HERE";  // OneDrive or GitHub raw link
 
 function createSection(title, htmlContent) {
     const section = document.createElement("div");
@@ -48,7 +110,7 @@ fetch(jsonUrl)
         `));
 
         container.appendChild(createSection("Speakers", `
-            <ul>${data.Speakers.map(s => `<li>${s}</li>`).join("")}</ul>
+            <ul>${data.Speakers.map((s, i) => `<li>${s}</li>`).join("")}</ul>
         `));
 
         container.appendChild(createSection("Announcements", `
@@ -72,3 +134,6 @@ fetch(jsonUrl)
         `));
     });
 </script>
+
+</body>
+</html>
