@@ -1,0 +1,74 @@
+<script>
+const jsonUrl = "https://1drv.ms/u/c/f3a38f6c89693944/IQDClBXmCcxyQoYcbB1XzJhKASJ7rk2rgftOdEobjgRCeOI?e=FwTHFg";
+
+function createSection(title, htmlContent) {
+    const section = document.createElement("div");
+    section.className = "section";
+
+    const header = document.createElement("div");
+    header.className = "section-header";
+    header.textContent = title;
+
+    const content = document.createElement("div");
+    content.className = "section-content";
+    content.innerHTML = htmlContent;
+
+    header.addEventListener("click", () => {
+        section.classList.toggle("open");
+    });
+
+    section.appendChild(header);
+    section.appendChild(content);
+    return section;
+}
+
+fetch(jsonUrl)
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("program-date").textContent =
+            "Sacrament Meeting – " + new Date(data.MeetingDate).toLocaleDateString();
+
+        const container = document.getElementById("program-container");
+
+        container.appendChild(createSection("Presiding & Conducting", `
+            <p><strong>Presiding:</strong> ${data.Presiding}</p>
+            <p><strong>Conducting:</strong> ${data.Conducting}</p>
+            <p><strong>Chorister:</strong> ${data.Chorister}</p>
+            <p><strong>Organist:</strong> ${data.Organist}</p>
+            <p><strong>Invocation:</strong> ${data.Invocation}</p>
+            <p><strong>Benediction:</strong> ${data.Benediction}</p>
+        `));
+
+        container.appendChild(createSection("Hymns", `
+            <p><strong>Opening Hymn:</strong> ${data.OpeningHymn}</p>
+            <p><strong>Sacrament Hymn:</strong> ${data.SacramentHymn}</p>
+            <p><strong>Intermediate Hymn:</strong> ${data.IntermediateHymn}</p>
+            <p><strong>Special Musical Number:</strong> ${data.SpecialMusicalNumber}</p>
+            <p><strong>Closing Hymn:</strong> ${data.ClosingHymn}</p>
+        `));
+
+        container.appendChild(createSection("Speakers", `
+            <ul>${data.Speakers.map(s => `<li>${s}</li>`).join("")}</ul>
+        `));
+
+        container.appendChild(createSection("Announcements", `
+            <ul>${data.Announcements.map(a => `<li>${a}</li>`).join("")}</ul>
+        `));
+
+        container.appendChild(createSection("New Members", `
+            <ul>${data.NewMembers.map(a => `<li>${a}</li>`).join("")}</ul>
+        `));
+
+        container.appendChild(createSection("Naming & Blessing Children", `
+            <ul>${data.NamingAndBlessingChildren.map(a => `<li>${a}</li>`).join("")}</ul>
+        `));
+
+        container.appendChild(createSection("Aaronic Priesthood Ordinations", `
+            <ul>${data.AaronicPriesthoodOrdinations.map(a => `<li>${a}</li>`).join("")}</ul>
+        `));
+
+        container.appendChild(createSection("Confirmations", `
+            <ul>${data.Confirmations.map(a => `<li>${a}</li>`).join("")}</ul>
+        `));
+    });
+</script>
