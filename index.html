@@ -1,139 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sacrament Meeting Program</title>
+    <meta charset="UTF-8">
+    <title>Sacrament Meeting Program</title>
 
-<style>
-    body {
-        font-family: system-ui, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: #f7f7f7;
-        color: #222;
-    }
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    header {
-        background: #003366;
-        color: white;
-        padding: 1.2rem;
-        text-align: center;
-        font-size: 1.5rem;
-    }
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-    .section {
-        background: white;
-        margin: 0.8rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .section-header {
-        padding: 1rem;
-        font-size: 1.2rem;
-        font-weight: bold;
-        cursor: pointer;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .section-content {
-        padding: 1rem;
-        display: none;
-        font-size: 1rem;
-        line-height: 1.5;
-    }
-
-    .section.open .section-content {
-        display: block;
-    }
-
-    ul {
-        padding-left: 1.2rem;
-    }
-</style>
-
+        .section-card {
+            margin-bottom: 1.5rem;
+        }
+    </style>
 </head>
+
 <body>
 
-<header id="program-date">Sacrament Meeting Program</header>
+    <!-- Header -->
+    <nav class="navbar navbar-dark bg-primary mb-4">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">Sacrament Meeting Program</span>
+        </div>
+    </nav>
 
-<div id="program-container"></div>
+    <!-- Main Content -->
+    <div class="container" id="program-container">
+        <!-- Cards will be injected here -->
+    </div>
 
-<script>
-const jsonUrl = "https://andrewmeissner.github.io/sacrament-program/data/program.json";
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-function createSection(title, htmlContent) {
-    const section = document.createElement("div");
-    section.className = "section";
+    <script>
+        // UPDATE THIS URL to your GitHub Pages JSON file
+        const jsonUrl = "https://andrewmeissner.github.io/sacrament-program/data/program.json";
 
-    const header = document.createElement("div");
-    header.className = "section-header";
-    header.textContent = title;
+        function card(title, content) {
+            return `
+        <div class="card shadow-sm section-card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">${title}</h5>
+          </div>
+          <div class="card-body">
+            ${content}
+          </div>
+        </div>
+      `;
+        }
 
-    const content = document.createElement("div");
-    content.className = "section-content";
-    content.innerHTML = htmlContent;
+        fetch(jsonUrl)
+            .then(response => response.json())
+            .then(data => {
 
-    header.addEventListener("click", () => {
-        section.classList.toggle("open");
-    });
+                document.getElementById("program-container").innerHTML = `
+          ${card("Date", data.MeetingDate)}
 
-    section.appendChild(header);
-    section.appendChild(content);
-    return section;
-}
+          ${card("Presiding & Conducting", `
+            <strong>Presiding:</strong> ${data.Presiding}<br>
+            <strong>Conducting:</strong> ${data.Conducting}<br>
+            <strong>Chorister:</strong> ${data.Chorister}<br>
+            <strong>Organist:</strong> ${data.Organist}<br>
+            <strong>Invocation:</strong> ${data.Invocation}<br>
+            <strong>Benediction:</strong> ${data.Benediction}
+          `)}
 
-fetch(jsonUrl)
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById("program-date").textContent =
-            "Sacrament Meeting – " + data.MeetingDate;
+          ${card("Hymns", `
+            <strong>Opening Hymn:</strong> ${data.OpeningHymn}<br>
+            <strong>Sacrament Hymn:</strong> ${data.SacramentHymn}<br>
+            <strong>Intermediate Hymn:</strong> ${data.IntermediateHymn}<br>
+            <strong>Special Musical Number:</strong> ${data.SpecialMusicalNumber}<br>
+            <strong>Closing Hymn:</strong> ${data.ClosingHymn}
+          `)}
 
-        const container = document.getElementById("program-container");
+          ${card("Speakers", data.Speakers.join("<br>"))}
 
-        container.appendChild(createSection("Presiding & Conducting", `
-            <p><strong>Presiding:</strong> ${data.Presiding}</p>
-            <p><strong>Conducting:</strong> ${data.Conducting}</p>
-            <p><strong>Chorister:</strong> ${data.Chorister}</p>
-            <p><strong>Organist:</strong> ${data.Organist}</p>
-            <p><strong>Invocation:</strong> ${data.Invocation}</p>
-            <p><strong>Benediction:</strong> ${data.Benediction}</p>
-        `));
+          ${card("Announcements", data.Announcements.join("<br>"))}
 
-        container.appendChild(createSection("Hymns", `
-            <p><strong>Opening Hymn:</strong> ${data.OpeningHymn}</p>
-            <p><strong>Sacrament Hymn:</strong> ${data.SacramentHymn}</p>
-            <p><strong>Intermediate Hymn:</strong> ${data.IntermediateHymn}</p>
-            <p><strong>Special Musical Number:</strong> ${data.SpecialMusicalNumber}</p>
-            <p><strong>Closing Hymn:</strong> ${data.ClosingHymn}</p>
-        `));
+          ${card("Releasings", data.Releasings.join("<br>"))}
 
-        container.appendChild(createSection("Speakers", `
-            <ul>${data.Speakers.map(s => `<li>${s}</li>`).join("")}</ul>
-        `));
+          ${card("Sustainings", data.Sustainings.join("<br>"))}
 
-        container.appendChild(createSection("Announcements", `
-            <ul>${data.Announcements.map(a => `<li>${a}</li>`).join("")}</ul>
-        `));
+          ${card("New Members", data.NewMembers.join("<br>"))}
 
-        container.appendChild(createSection("New Members", `
-            <ul>${data.NewMembers.map(a => `<li>${a}</li>`).join("")}</ul>
-        `));
+          ${card("Naming & Blessing Children", data.NamingAndBlessingChildren.join("<br>"))}
 
-        container.appendChild(createSection("Naming & Blessing Children", `
-            <ul>${data.NamingAndBlessingChildren.map(a => `<li>${a}</li>`).join("")}</ul>
-        `));
+          ${card("Aaronic Priesthood Ordinations", data.AaronicPriesthoodOrdinations.join("<br>"))}
 
-        container.appendChild(createSection("Aaronic Priesthood Ordinations", `
-            <ul>${data.AaronicPriesthoodOrdinations.map(a => `<li>${a}</li>`).join("")}</ul>
-        `));
-
-        container.appendChild(createSection("Confirmations", `
-            <ul>${data.Confirmations.map(a => `<li>${a}</li>`).join("")}</ul>
-        `));
-    });
-</script>
+          ${card("Confirmations", data.Confirmations.join("<br>"))}
+        `;
+            })
+            .catch(err => {
+                document.getElementById("program-container").innerHTML =
+                    card("Error", "Unable to load program data.<br><br>" + err);
+            });
+    </script>
 
 </body>
+
 </html>
