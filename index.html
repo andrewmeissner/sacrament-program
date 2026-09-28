@@ -61,7 +61,7 @@
 <div id="program-container"></div>
 
 <script>
-const jsonUrl = "YOUR_JSON_PUBLIC_LINK_HERE";  // OneDrive or GitHub raw link
+const jsonUrl = "https://1drv.ms/u/c/f3a38f6c89693944/IQDClBXmCcxyQoYcbB1XzJhKASJ7rk2rgftOdEobjgRCeOI?e=FwTHFg";
 
 function createSection(title, htmlContent) {
     const section = document.createElement("div");
@@ -110,7 +110,7 @@ fetch(jsonUrl)
         `));
 
         container.appendChild(createSection("Speakers", `
-            <ul>${data.Speakers.map((s, i) => `<li>${s}</li>`).join("")}</ul>
+            <ul>${data.Speakers.map(s => `<li>${s}</li>`).join("")}</ul>
         `));
 
         container.appendChild(createSection("Announcements", `
