@@ -88,7 +88,7 @@ fetch(jsonUrl)
     .then(response => response.json())
     .then(data => {
         document.getElementById("program-date").textContent =
-            "Sacrament Meeting – " + new Date(data.MeetingDate).toLocaleDateString();
+            "Sacrament Meeting – " + data.MeetingDate;
 
         const container = document.getElementById("program-container");
 
