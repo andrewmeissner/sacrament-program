@@ -1,63 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Sacrament Meeting Program</title>
+  <meta charset="UTF-8">
+  <title>Sacrament Meeting Program</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Lite -->
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
+  <!-- Material Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-        .section-card {
-            margin-bottom: 1.5rem;
-        }
-    </style>
+  <style>
+    body {
+      background: #f5f5f5;
+    }
+    .page-content {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .mdl-card {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .mdl-card__title {
+      padding: 16px;
+    }
+    .mdl-card__supporting-text {
+      padding: 16px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+  </style>
 </head>
 
-<body>
+<body class="mdl-color--grey-100 mdl-typography--body-1">
 
-    <!-- Header -->
-    <nav class="navbar navbar-dark bg-primary mb-4">
-        <div class="container">
-            <span class="navbar-brand mb-0 h1">Sacrament Meeting Program</span>
-        </div>
-    </nav>
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header mdl-color--indigo-500 mdl-color-text--white">
+      <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title">Sacrament Meeting Program</span>
+      </div>
+    </header>
 
-    <!-- Main Content -->
-    <div class="container" id="program-container">
+    <main class="mdl-layout__content">
+      <div class="page-content" id="program-container">
         <!-- Cards will be injected here -->
-    </div>
+      </div>
+    </main>
+  </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // UPDATE THIS URL to your GitHub Pages JSON file
+    const jsonUrl = "https://andrewmeissner.github.io/sacrament-program/data/program.json";
 
-    <script>
-        // UPDATE THIS URL to your GitHub Pages JSON file
-        const jsonUrl = "https://andrewmeissner.github.io/sacrament-program/data/program.json";
+    // Prevent crashes if JSON fields are missing or not arrays
+    function safeList(arr) {
+      return Array.isArray(arr) ? arr.join("<br>") : "";
+    }
 
-        function card(title, content) {
-            return `
-        <div class="card shadow-sm section-card">
-          <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">${title}</h5>
+    function card(title, content) {
+      return `
+        <div class="mdl-card mdl-shadow--2dp">
+          <div class="mdl-card__title mdl-color--indigo-500 mdl-color-text--white">
+            <h2 class="mdl-card__title-text">${title}</h2>
           </div>
-          <div class="card-body">
+          <div class="mdl-card__supporting-text">
             ${content}
           </div>
         </div>
       `;
-        }
+    }
 
-        fetch(jsonUrl)
-            .then(response => response.json())
-            .then(data => {
+    fetch(jsonUrl)
+      .then(response => response.json())
+      .then(data => {
 
-                document.getElementById("program-container").innerHTML = `
+        document.getElementById("program-container").innerHTML = `
           ${card("Date", data.MeetingDate)}
 
           ${card("Presiding & Conducting", `
@@ -77,29 +97,21 @@
             <strong>Closing Hymn:</strong> ${data.ClosingHymn}
           `)}
 
-          ${card("Speakers", data.Speakers.join("<br>"))}
-
-          ${card("Announcements", data.Announcements.join("<br>"))}
-
-          ${card("Releasings", data.Releasings.join("<br>"))}
-
-          ${card("Sustainings", data.Sustainings.join("<br>"))}
-
-          ${card("New Members", data.NewMembers.join("<br>"))}
-
-          ${card("Naming & Blessing Children", data.NamingAndBlessingChildren.join("<br>"))}
-
-          ${card("Aaronic Priesthood Ordinations", data.AaronicPriesthoodOrdinations.join("<br>"))}
-
-          ${card("Confirmations", data.Confirmations.join("<br>"))}
+          ${card("Speakers", safeList(data.Speakers))}
+          ${card("Announcements", safeList(data.Announcements))}
+          ${card("Releasings", safeList(data.Releasings))}
+          ${card("Sustainings", safeList(data.Sustainings))}
+          ${card("New Members", safeList(data.NewMembers))}
+          ${card("Naming & Blessing Children", safeList(data.NamingAndBlessingChildren))}
+          ${card("Aaronic Priesthood Ordinations", safeList(data.AaronicPriesthoodOrdinations))}
+          ${card("Confirmations", safeList(data.Confirmations))}
         `;
-            })
-            .catch(err => {
-                document.getElementById("program-container").innerHTML =
-                    card("Error", "Unable to load program data.<br><br>" + err);
-            });
-    </script>
+      })
+      .catch(err => {
+        document.getElementById("program-container").innerHTML =
+          card("Error", "Unable to load program data.<br><br>" + err);
+      });
+  </script>
 
 </body>
-
 </html>
